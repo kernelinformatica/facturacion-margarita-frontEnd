@@ -1,0 +1,34 @@
+@import '../../../theme/sass/auth';
+
+.auth-main {
+    background: url('../../../../assets/img/fondoFacturacionFin.jpg') no-repeat center center fixed;
+
+    background-size: cover !important;
+
+
+    // background: url('/assets/img/arrow-green-up.svg') no-repeat 0 0;
+    // url('assets/img/fondoLogin.jpg') no-repeat center center fixed
+
+    .spinner-container {
+        display: flex;
+        margin: 0 auto;
+        font-size: 6rem;
+        color: #fefefe;
+    }
+}
+.auth-foooter {
+    text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: black;
+  }
+  .auth-foooter a{
+      color:black;
+  }
+  .auth-foooter a:hover{
+      color:white;
+  }   
+.imgLogo {
+width: 15%;
+height: 15%;
+
+}

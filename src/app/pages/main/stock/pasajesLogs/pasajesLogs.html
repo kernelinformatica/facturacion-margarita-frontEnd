@@ -1,0 +1,16 @@
+<div class="lista-pasajes">
+
+    <ba-card cardTitle="Logs Pasajes" baCardClass="with-scroll" class="data-table-container">
+        <data-tables
+            [data]="tableData | async"
+            [columns]="tableColumns"
+            [rowsOnPage]="100"
+            tituloTabla="Lista Pasajes" >
+        </data-tables>
+
+    </ba-card>
+</div>
+<div style="text-align: center;" *ngIf="isLoading" class="spinner-container">
+    <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+    <p style="text-align: center;">Aguarde un momento, por favor.</p>
+</div>
