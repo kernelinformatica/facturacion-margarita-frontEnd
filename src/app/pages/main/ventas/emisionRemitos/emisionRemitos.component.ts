@@ -1,3 +1,4 @@
+
 import * as _ from "lodash";
 import * as moment from "moment";
 import {
@@ -60,6 +61,7 @@ import { ContratosService } from "app/services/contratosService";
 import { AuthService } from "app/services/authService";
 import { ComprobanteService } from "app/services/comprobanteService";
 import { ModeloDetalle } from "app/models/modeloDetalle";
+import { ThrowStmt } from "@angular/compiler/src/output/output_ast";
 
 @Component({
   selector: "emision-remitos",
@@ -160,6 +162,8 @@ statusPorcentajeCotas: String;
   pesificadoPersisteSn = false;
   percep2459: boolean = false;
   nroCopias: number = 3;
+  preCargaPadron:String = "";
+  statusCargaPadron : boolean;
   /////////////////////////////////////////////
   ////////////////// Otros ////////////////////
   /////////////////////////////////////////////
@@ -254,6 +258,24 @@ statusPorcentajeCotas: String;
     private contratosService: ContratosService
   ) {
     ////////// Listas desplegables //////////
+
+    this.preCargaPadron = "Cargando clientes, espere..."
+    this.statusCargaPadron = false;
+    this.recursoService
+    .getRecursoList(resourcesREST.padron)({
+        grupo: gruposParametros.cliente,
+    })
+    .subscribe((todos:any) => {
+        // this.proveedores.todos = proveedores;
+        this.cliente = todos;
+        this.preCargaPadron = "Cliente";
+        this.statusCargaPadron = true;
+
+    });
+
+
+
+
     this.sisSitIvas = this.recursoService.getRecursoList(
       resourcesREST.sisSitIva
     )();
@@ -465,7 +487,7 @@ statusPorcentajeCotas: String;
       }
 
       if (estado === "ok") {
-        // Actualizo datos dle producto (si NO son las facturas lo que se edita, o las forma de pago)
+        // Actualizo datos del producto (si NO son las facturas lo que se edita, o las forma de pago)
         if (
           tipoColumnas !== "columnasFactura" &&
           tipoColumnas !== "columnasDetallesFp"
@@ -494,14 +516,14 @@ statusPorcentajeCotas: String;
         // alert("No se puede modficfar el precio, no hay cotas de precios establecidas, debes trabajar con el precio sugerido")
         if (this.precioOriginal != itemSelect.precio) {
           this.statusPreciosCotas =
-             "ERROR: No se puede modificar el precio orginal, no hay cotas de precios establecidas para el artículo "+itemSelect.producto.codProducto+", debes trabajar con el precio sugerido "+itemSelect.producto.moneda.descripcion+" "+this.precioOriginal;
+             "ERROR: No se puede modificar el precio orginal, no hay cotas de precios establecidas para el artículo seleccionado, debes trabajar con el precio sugerido ";
              itemSelect.precio = this.precioOriginal;
         } else {
             this.statusPreciosCotas = "";
         }
       } else {
          if (permisoCotaPrecio == false){
-        this.statusPreciosCotas = "Error :: El Precio ("+itemSelect.precio+") del articulo "+itemSelect.producto.codProducto+"  no esta dentro de las cotas permitidas ( >= "+itemSelect.cotaInferior+" y <= "+itemSelect.cotaSuperior+").";
+        this.statusPreciosCotas = "Error :: El Precio del articulo  no esta dentro de las cotas permitidas ( >= "+itemSelect.cotaInferior+" y <= "+itemSelect.cotaSuperior+").";
         itemSelect.precio = this.precioOriginal;
     }else{
         this.statusPreciosCotas = "";
@@ -509,17 +531,17 @@ statusPorcentajeCotas: String;
       }
 
 
-      debugger
+
       if (permisoModificaPorcentaje == false) {
         //alert("No se puede modficfar el porcentaje, no hay cotas debes trabajar con el porcenjaje establecido")
         if (this.descuentoOriginal != itemSelect.descuento) {
             this.statusPorcentajeCotas =
-               "ERROR: No se puede modificar el porcentaje orginal, no hay cotas de porcentajes establecidas para el artículo "+itemSelect.producto.codProducto+", debes trabajar con el porcentaje sugerido "+this.descuentoOriginal;
+               "ERROR: No se puede modificar el porcentaje orginal, no hay cotas de porcentajes establecidas para el artículo , debes trabajar con el porcentaje sugerido ";
                itemSelect.descuento = this.descuentoOriginal;
           }
         }else{
             if (permisoCotaPorcentaje == false){
-                this.statusPorcentajeCotas = "Error :: El Procentaje de descuento ("+itemSelect.descuento+") del producto "+itemSelect.producto.codProducto+" no esta dentro de las cotas permitidas ( >= "+itemSelect.cotaInfPorc+" y <= "+itemSelect.cotaSupPorc+").";
+                this.statusPorcentajeCotas = "Error :: El Procentaje de descuento  del producto  no esta dentro de las cotas permitidas ( >= "+itemSelect.cotaInfPorc+" y <= "+itemSelect.cotaSupPorc+").";
                 itemSelect.descuento = this.descuentoOriginal;
             }else{
                    this.statusPorcentajeCotas = "";
@@ -529,6 +551,8 @@ statusPorcentajeCotas: String;
 
 
     }
+    this.statusPorcentajeCotas = "";
+    this.statusPreciosCotas = "";
   };
 
   buscarCerealesCanje = () => {
@@ -991,6 +1015,7 @@ statusPorcentajeCotas: String;
    * También retorno el cliente seleccionado en el input
    * También checkeo si ya seleccionó cte y pto venta y fecha, y si es así entonces hago la consulta de formas de pago
    */
+
   onBlurInputCliente = (e) => {
     // Al hacer blur (apreta TAB) está intentando agarrar por padronCodigo, asi que lo busco
     const clienteExistente = this.clientes.filtrados.value.find(

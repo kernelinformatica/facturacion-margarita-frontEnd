@@ -97,7 +97,8 @@ export class ComprobanteCompra implements AfterViewInit {
     sumatoriaSubtotales: number = 0;
     // Fps seleccionadas
     formasPagoSeleccionadas: FormaPago[] = [];
-
+    preCargaPadron:String = "";
+    statusCargaPadron : boolean;
     /////////////////////////////////////////////
     //////////// Listas desplegables ////////////
     /////////////////////////////////////////////
@@ -182,7 +183,8 @@ export class ComprobanteCompra implements AfterViewInit {
         configProgressBar.striped = true;
         configProgressBar.animated = true;
         configProgressBar.type = "success";
-
+        this.preCargaPadron = "Cargando proovedores, espere..."
+        this.statusCargaPadron = false;
         ////////// Listas desplegables  //////////
         this.tiposOperacion = this.recursoService.getRecursoList(
             resourcesREST.sisTipoOperacion
@@ -217,6 +219,8 @@ export class ComprobanteCompra implements AfterViewInit {
             .subscribe((proveedores) => {
                 // this.proveedores.todos = proveedores;
                 this.proveedores.filtrados.next(proveedores);
+                this.preCargaPadron = "Proovedor"
+                this.statusCargaPadron = true;
             });
 
         ////////// Tablas //////////
@@ -416,7 +420,7 @@ export class ComprobanteCompra implements AfterViewInit {
     onClickCancelarAjuste = () => {
         this.ajusteConfirmado = false;
     };
-   
+
     onClickConfirmEdit = (tipoColumnas) => (itemSelect: any) => {
         // Todos los atributos 'enEdicion' distintos de undefined y también distintos de null o false, los seteo en false
         this.tablas.columnas[tipoColumnas] = this.tablas.columnas[
@@ -452,7 +456,7 @@ export class ComprobanteCompra implements AfterViewInit {
                     this.estadoEdicionCantidadProducto = true;
                 }
             } else {
-               
+
             }*/
 
             this.estadoEdicionCantidadProducto = false;
@@ -640,7 +644,7 @@ export class ComprobanteCompra implements AfterViewInit {
      * Valida y graba el comprobante
      */
     onClickConfirmar = () =>
-    
+
         this.utilsService.showModal("Aviso")("¿Confirmar comprobante?")(() => {
             if (this.fechaComprobanteInvalida()) {
                 // Y le aviso
@@ -659,7 +663,7 @@ export class ComprobanteCompra implements AfterViewInit {
 
                 return;
             } else {
-                
+
                 // Spinner bar
                 this.valueGuardandoCompro = 50;
                 // Actualizo las facturas antes de confirmar
@@ -1071,7 +1075,7 @@ export class ComprobanteCompra implements AfterViewInit {
         }
     };
 
-    /* verificoRelacionadoObligatorio = Si comprobantes relacionadoObligatorio esta en true, no dejo que se puedan agregar articulos porque 
+    /* verificoRelacionadoObligatorio = Si comprobantes relacionadoObligatorio esta en true, no dejo que se puedan agregar articulos porque
       se toman desde los comprobantes relacionados ya cargados (ejemplo remitos)
     */
     verificoRelacionadoObligatorio = (val: Boolean) => {

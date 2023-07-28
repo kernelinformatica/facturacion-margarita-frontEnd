@@ -2,8 +2,9 @@
     <form #compForm="ngForm">
         <div class="row">
             <div class="col-sm-2">
+                <label for="proveedorSeleccionado">{{preCargaPadron}}</label>
                 <div class="form-group inline-group">
-                    <label for="proveedorSeleccionado">Proovedor</label>
+
                     <input  #inputProveedorDom
                             autocomplete="off"
                             id="inputProveedor"
@@ -48,44 +49,53 @@
             </popup-lista>
 
             <div class="col-sm-3">
+                <label for="cuit">NOMBRE Y APELLIDO</label>
                 <div class="form-group">
                     <input autocomplete="off"  [disabled]="true" name="padronApellido" [(ngModel)]="proveedorSeleccionado.padronApelli" type="text" class="form-control" id="nombreProveedor" placeholder="">
                 </div>
             </div>
             <div class="col-sm-2">
+                <label for="cuit">CUIT</label>
                 <div class="form-group inline-group">
-                    <label for="cuit">CUIT</label>
+
                     <input autocomplete="off"  [disabled]="true" name="cuitPadr" [(ngModel)]="proveedorSeleccionado.cuit" type="text" class="form-control" id="cuit" placeholder="">
                 </div>
             </div>
             <div class="col-sm-1">
+                <label for="iva">SIT.</label>
                 <div class="form-group inline-group">
-                    <label for="iva">SIT.</label>
+
                     <input autocomplete="off"  [disabled]="true" name="descCortaIva" [ngModel]="proveedorSeleccionado.condIva ? proveedorSeleccionado.condIva.descCorta : ''" type="text" class="form-control" id="iva" placeholder="">
                 </div>
             </div>
-            <div class="col-sm-2 form-group inline-group tipo-compra-dropdown without-padding">
+            <div class="col-sm-2">
                 <label for="tipoOperacionSelect">Tipo Operacion:</label>
-                <select
-                    required
-                    class="form-control without-padding"
-                    name="tipoOPselec"
-                    [(ngModel)]="tipoOpSelect"
-                    (ngModelChange)="onChangeTipoOperacion($event)"
-                    [ngStyle]="{padding: '0px 8px 0px 8px'}" id="tipoOperacionSelect">
-                    <option *ngFor="let tipoOp of tiposOperacion | async" [ngValue]="tipoOp">
-                        {{tipoOp.descripcion}}
-                    </option>
-                </select>
+                <div class="form-group inline-group">
+
+                    <select
+                        required
+                        class="form-control without-padding"
+                        name="tipoOPselec"
+                        [(ngModel)]="tipoOpSelect"
+                        (ngModelChange)="onChangeTipoOperacion($event)"
+                        [ngStyle]="{padding: '0px 8px 0px 8px'}" id="tipoOperacionSelect">
+                        <option *ngFor="let tipoOp of tiposOperacion | async" [ngValue]="tipoOp">
+                            {{tipoOp.descripcion}}
+                        </option>
+                    </select>
+                </div>
             </div>
-            <div class="col-sm-2 form-group inline-group padding-content">
+            <div class="col-sm-2">
                 <label class="add-item-label" for="depositoInput">Deposito: </label>
-                <select required [compareWith]="utilsService.dropdownCompareWith" name="depoSelect" [(ngModel)]="depositoSelec" class="form-control without-padding">
-                    <option *ngFor="let dep of depositosAMostrar" [ngValue]="dep">
-                        {{dep.descripcion}}
-                    </option>
-                </select>
+                <div class="form-group inline-group">
+                      <select required [compareWith]="utilsService.dropdownCompareWith" name="depoSelect" [(ngModel)]="depositoSelec" class="form-control without-padding">
+                        <option *ngFor="let dep of depositosAMostrar" [ngValue]="dep">
+                            {{dep.descripcion}}
+                        </option>
+                    </select>
+                </div>
             </div>
+
         </div>
 
         <div class="row custom-card-container">

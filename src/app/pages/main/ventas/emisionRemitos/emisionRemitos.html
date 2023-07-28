@@ -5,7 +5,7 @@
     <form #ventForm="ngForm">
         <div class="row">
             <div class="col-sm-2">
-                    <label for="cliente">Cliente</label>
+                    <label for="cliente">{{preCargaPadron}}</label>
                 <div class="form-group  inline-group">
                     <div class="cliente-input-container" style="display: flex; flex-direction: column ">
 
@@ -15,6 +15,7 @@
                             (ngModelChange)="onChangeInputCliente($event)"
                             required
                             name="clPadCod"
+                            [disabled]="!statusCargaPadron"
                             [(ngModel)]="cliente.padronCodigo" type="text" class="form-control" placeholder=""
                             (keyup.enter)="onEnterInputProv($event)" (keydown.arrowdown)="keyPressInputTexto($event)('down')"
                             (keydown.arrowup)="keyPressInputTexto($event)('up')"
@@ -36,8 +37,11 @@
                             ">
                             <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                         </div>
+
                     </div>
+
                 </div>
+
             </div>
 
             <popup-lista

@@ -1,5 +1,5 @@
 import { Versionado } from './../../../models/versionado';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { LoginService } from '../../../services/loginservice';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -7,13 +7,14 @@ import { Router } from '@angular/router';
 import { UtilsService } from 'app/services/utilsService';
 import { DecimalPipe } from '@angular/common';
 import { environment } from 'environments/environment';
+import { forEachLeadingCommentRange } from 'typescript';
 
 @Component({
     selector: 'login',
     templateUrl: './login.html',
     styleUrls: ['./login.scss']
 })
-export class Login {
+export class Login  {
     public form: FormGroup;
     public usuario: AbstractControl;
     public password: AbstractControl;
@@ -38,6 +39,30 @@ export class Login {
 
     }
 
+    ngOnInit (){
+       interface Programmers {
+        id: number;
+        name: string;
+        department: string;
+      }
+
+
+          const programmers: Programmers[] = [
+            { id: 1, name: 'Dario Quiroga', department: 'Web' },
+            { id: 2, name: 'Adrian Pascuti', department: 'Facturacion' },
+            { id: 3, name: 'Sergio Pillon', department: 'Analisis' },
+          ];
+
+          const result = programmers.filter((obj) => {
+           // return obj.department === 'web' || obj.id === 1;
+
+            if (obj.id ===  1){
+                console.log("-----> "+obj.name+" |  Departamento: "+obj.department)
+                return obj;
+            }
+
+        });
+    }
     async onSubmit(values: Object) {
         if (this.form.valid) {
             try {
