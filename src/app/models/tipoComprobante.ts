@@ -12,11 +12,9 @@ export class TipoComprobante {
     surenu: string;
     observaciones: string;
     comprobante: SisComprobante;
-    //numerador: any[];
     requiereFormaPago: boolean;
-
+    requiereClaveAutorizacion: boolean;
     letrasCodigos: any[];
-
     constructor (tipoComprobante?: {
         idCteTipo: number;
         codigoComp: number;
@@ -28,6 +26,7 @@ export class TipoComprobante {
         comprobante: any;
         numerador: Numerador[];
         requiereFormaPago: boolean;
+        requiereClaveAutorizacion: boolean;
         letrasCodigos: any[];
     }) {
         if (tipoComprobante) {
@@ -41,7 +40,7 @@ export class TipoComprobante {
             this.comprobante = new SisComprobante(tipoComprobante.comprobante);
             // this.numerador = tipoComprobante.numerador.map(n => new Numerador(n));
             this.requiereFormaPago = tipoComprobante.requiereFormaPago;
-
+            this.requiereClaveAutorizacion= tipoComprobante.requiereClaveAutorizacion;
             this.letrasCodigos = tipoComprobante.letrasCodigos.map(lc => ({
                 letra: new SisLetra(lc.letra),
                 codigoAfip: new CodigoAfip(lc.codigoAfip),
@@ -60,6 +59,7 @@ export class TipoComprobante {
             this.comprobante = null;
             // this.numerador = null;
             this.requiereFormaPago = null;
+            this.requiereClaveAutorizacion = null;
 
             this.letrasCodigos = [];
         }

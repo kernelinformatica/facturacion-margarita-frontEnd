@@ -90,7 +90,7 @@ export class EmisionRemitos {
     factura: Comprobante = new Comprobante();
     statusPreciosCotas: String;
     statusPorcentajeCotas: String;
-
+    mensajeAutorizaAfip :string;
     dataVendedor: {
         vendedor: Vendedor;
         incluir: boolean;
@@ -154,6 +154,7 @@ export class EmisionRemitos {
     numeroComprobanteAfipRelacionado: number;
     numeroAfipRelacionado: number;
     factCabAfipRelacionado: number;
+
     disableRest: boolean = false;
     esCanje: boolean = false;
     esPesificado: boolean = false;
@@ -184,6 +185,7 @@ export class EmisionRemitos {
     diferidoVto = false;
     cereal = null;
     condicionesConfirmadas = false;
+
     /////////////////////////////////////////////
     ////////////////// Tablas ///////////////////
     /////////////////////////////////////////////
@@ -236,6 +238,8 @@ export class EmisionRemitos {
 
     // Porcentaje de grabado
     grabandoPorcentaje = 0;
+    // Porcentaje de grabado afip;
+    grabandoPorcentajeAfip = 0;
 
     @HostListener("window:beforeunload")
     canDeactivate() {
@@ -684,6 +688,7 @@ export class EmisionRemitos {
      * Valida y graba el comprobante
      */
     onClickConfirmar = () =>
+
         this.emisionRemitosService.existsProductsWithoutCantidad(
             this.tablas.datos.productosPend
         )
@@ -693,8 +698,16 @@ export class EmisionRemitos {
             : this.utilsService.showModal("Confirmar")(
                   "¿Confirmar emision de comprobante?"
               )(() => {
-                  this.actualizarSumatoriaSubto();
 
+                //this.comprobante.tipo.idCteTipo == 77
+                  if (this.comprobante.tipo.requiereClaveAutorizacion == true){
+                    if (this.claveAutorizacion === "" || this.claveAutorizacion === null){
+                        this.utilsService.showModal("Error")(
+                            `Se requiere que ingrese su clave para continuar.`
+                        )()();
+                    }
+                  }
+                  this.actualizarSumatoriaSubto();
                   // Si SI hay intervalo y la fecha SE SALE de el, entonces..
                   if (this.fechaComprobanteInvalida()) {
                       this.utilsService.showModal("Error de fecha")(
@@ -734,76 +747,93 @@ export class EmisionRemitos {
                           )
                           .catch((err) => {
                               this.grabandoPorcentaje = 0;
+                              this.grabandoPorcentajeAfip = 0;
                               this.utilsService.showErrorWithBody(err);
                               return Observable.throw(null);
                           })
                           .subscribe((respuesta: any) => {
+
                               this.grabandoPorcentaje = 60;
                               if (this.comprobante.tipo.cursoLegal) {
-                                  // Autorizo en AFIP
-                                  /*this.emisionRemitosService
-                    .autorizarAfip(
-                      respuesta.datos.idFactCab,
-                      this.factCabAfipRelacionado
-                    )
-                    .catch((err) => {
-                      this.blanquearCampos();
-                      this.grabandoPorcentaje = 0;
-                      this.utilsService.showErrorWithBody(
-                        err,
-                        true,
-                        () => console.log(" Recargo pantalla (TODO: Podría limpiar campo por campo, pero es mas simple y menos costozo recargar la página)")
-                        );
+                                        this.grabandoPorcentajeAfip =35;
+                                        /*
 
-                        return Observable.throw(null);
-                      })
-                      .subscribe((respAfip) => {
-                        if (respAfip && respAfip.datos) {
-                          this.grabandoPorcentaje = 0;
+                                        Autorizo en AFIP
 
-                          const compCreado = new ComprobanteEncabezado();
-                          compCreado.idFactCab = respuesta.datos.idFactCab;
-                          compCreado.numero = Number(
-                            `${
-                              this.comprobante.numerador.ptoVenta.ptoVenta
-                            }${this.comprobante.numerador.ptoVenta.ptoVenta
-                              .toString()
-                              .padStart(8, "0")}`
-                          );
+                                        */
+                                        debugger
+                                        this.emisionRemitosService
+                                        .autorizarAfip(
+                                        respuesta.datos.idFactCab,
+                                        this.factCabAfipRelacionado
+                                        )
+                                        .catch((err) => {
+                                        this.blanquearCampos();
+                                        this.grabandoPorcentaje = 0;
+                                        this.grabandoPorcentajeAfip = 0
+                                        this.utilsService.showErrorWithBody(
+                                            err,
+                                            true,
+                                            () => console.log(" Recargo pantalla (TODO: Podría limpiar campo por campo, pero es mas simple y menos costozo recargar la página)")
+                                            );
 
-                          this.utilsService.showImprimirModalAceptar(
-                            respuesta.control.codigo
-                          )(
-                            `${respuesta.control.descripcion}.
-                                                      CAI: ${respAfip.datos.cai}`
-                          )(() => {
-                            this.recursoService.downloadComp(
-                              compCreado,
-                              null,
-                              this.nroCopias,
-                              this.esCanje
-                            );
+                                            return Observable.throw(null);
+                                        })
+                                        .subscribe((respAfip) => {
+                                            this.grabandoPorcentajeAfip =60;
+                                            if (respAfip && respAfip.datos) {
+                                            const compCreado = new ComprobanteEncabezado();
+                                            compCreado.idFactCab = respuesta.datos.idFactCab;
+                                            this.grabandoPorcentajeAfip =95;
+                                            alert("Comprobante "+respAfip.datos.numero+" autorizado con éxito, CAI otorgado: "+respAfip.datos.cai)
+                                            ;
+                                            this.grabandoPorcentajeAfip =0;
+                                            compCreado.numero = Number(
+                                                `${
+                                                this.comprobante.numerador.ptoVenta.ptoVenta
+                                                }${this.comprobante.numerador.ptoVenta.ptoVenta
+                                                .toString()
+                                                .padStart(8, "0")}`
+                                            );
 
-                            this.blanquearCampos();
-                          })(compCreado)(() => {
-                            this.blanquearCampos();
-                          });
+                                            this.blanquearCampos();
 
-                          if (!this.comprobante.tipo.comprobante.usaContrato) {
+                                            /*this.utilsService.showImprimirModalAceptar(
+                                                respuesta.control.codigo
+                                            )(
+                                                `${respuesta.control.descripcion}.
+                                                                        CAI: ${respAfip.datos.cai}`
+                                            )(() => {
+                                                this.recursoService.downloadComp(
+                                                compCreado,
+                                                null,
+                                                this.nroCopias,
+                                                this.esCanje
+                                                );
+                                                this.blanquearCampos();
 
-                          }
-                        }
-                      });
+                                            })(compCreado)(() => {
+                                                this.blanquearCampos();
+                                            });*/
+
+                                            if (!this.comprobante.tipo.comprobante.usaContrato) {
+
+                                            }
+                                            }
+                                        });
 
 
 
+                                        /*
+
+                                        FIN AFIP
+
+                                        */
 
 
-
-                        */
 
                                   // no autoriza a afip, cambiar por el codigo de arriba cuando funcione el web service de afip
-                                  this.grabandoPorcentaje = 0;
+
 
                                   // Modal para imprimir
                                   const compCreado =
@@ -903,6 +933,7 @@ export class EmisionRemitos {
      * Blanquea todos los campos (cuando confirma se usa)
      */
     blanquearCampos = () => {
+
         const auxFecha = this.comprobante.fechaComprobante;
         this.comprobante = new Comprobante();
         this.comprobante.fechaComprobante = auxFecha;

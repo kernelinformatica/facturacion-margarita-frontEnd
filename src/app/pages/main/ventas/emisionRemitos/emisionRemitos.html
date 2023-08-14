@@ -2,6 +2,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <ba-card class="emision-remitos">
+
     <form #ventForm="ngForm">
         <div class="row">
             <div class="col-sm-2">
@@ -260,8 +261,9 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
-                    <div class="each-input"><label for="nroCopias">Nº Copias:</label>
+                    <div class="col-sm-3">
+                    <div class="each-input">
+                        <label for="nroCopias">Nº Copias:</label>
                         <select
                             required
                             class="form-control without-padding cond-cotiza copias-select"
@@ -282,11 +284,20 @@
                             </option>
                         </select>
                     </div>
+
                     </div>
-                    <div class="col-sm-6" *ngIf="comprobante && comprobante.tipo && comprobante.tipo.idCteTipo && comprobante.tipo.idCteTipo == 77">
-                        <div class="each-input"><label for="claveAutorizacion">Clave:</label>
-                        <input [(ngModel)]="claveAutorizacion" name="claveAutorizacion" (ngModelChange)="changeClave()"  style="margin-top: 4px;" type="number" class="form-control edit-input size-control" id="claveAutorizacion" placeholder="Clave">
-                    </div>
+                    <div class="col-sm-4" *ngIf="comprobante && comprobante.tipo && comprobante.tipo.idCteTipo && comprobante.tipo.idCteTipo == 77">
+
+                            <div class="each-input">
+                                <label for="claveAutorizacion">Clave</label>
+                             <input [(ngModel)]="claveAutorizacion" id = "claveAutorizacion"
+                             name="claveAutorizacion"
+                             (ngModelChange)="changeClave()"
+                             class=""
+                             type="password"
+                             class="form-control edit-input size-control"  >
+
+                        </div>
                     </div>
                 </div>
             </custom-card>
@@ -974,3 +985,11 @@
     </p>
     <p><ngb-progressbar [value]="grabandoPorcentaje" type="info"></ngb-progressbar></p>
 </div>
+
+<div *ngIf="grabandoPorcentajeAfip !== 0"  class="spinner-container-2">
+    <p class="title">
+        Autorizando comprobante en afip, aguarde un momento
+    </p>
+    <p><ngb-progressbar [value]="grabandoPorcentajeAfip" type="info"></ngb-progressbar></p>
+</div>
+
