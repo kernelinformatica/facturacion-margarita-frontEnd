@@ -815,7 +815,9 @@ export class AuthService {
         (pesificado?) =>
         (marcaPesificado?) =>
         (pesificadoPersisteSn?) =>
-        (nroCompPesificado?) => {
+        (nroCompPesificado?) =>
+        (claveAutorizacion?) =>
+        (idFactCabRelacionado?) => {
             return this.request(
                 [],
                 RequestMethod.Post,
@@ -1023,6 +1025,8 @@ export class AuthService {
                           )
                         : null,
                     letraFact: factura ? "A" : null,
+                    claveAutorizacionCteTipo: claveAutorizacion,
+                    idFactCabAutorizadoRelacionado : idFactCabRelacionado,
                     numeroFact:
                         factura &&
                         factura.numerador &&
@@ -1073,11 +1077,13 @@ export class AuthService {
                                   )
                               )
                             : null,
+
                     idContrato: contrato ? contrato.idContratos : null,
                     observacionesCanje: sisCanje ? sisCanje.descripcion : null,
                     idRelacionSisCanje: relacionCanje
                         ? relacionCanje.idRelacionSisCanje
                         : null,
+
                 },
                 {}
             );

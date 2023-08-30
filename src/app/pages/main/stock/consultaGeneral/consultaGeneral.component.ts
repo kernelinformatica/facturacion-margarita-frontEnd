@@ -24,7 +24,7 @@ export class ConsultaGeneral {
     depositos = Observable.of([]);
     // columnas de la tabla
     //columnsTablaHeader = "codigo, descripcion, Ingresos, Egresos, Stock, Ingresos Virtual, Egresos Virtual, Imnputado Virtual, StockVirtual";
-    columnasTablaHeader:String[] = ["codProducto", "codProductoOriginal", "descripcion","ingresos", "egresos", "precioCompra", "stockFisico", "ingresoVirtual", "egresoVirtual", "virtualImputado", "stockVirtual"];
+    columnasTablaHeader:String[] = ["codProducto", "codProductoOriginal", "descripcion","ingresos", "egresos", "monedaNombre", "precioCompra",  "stockFisico", "ingresoVirtual", "egresoVirtual", "virtualImputado", "stockVirtual"];
     conSinStock = "Con Stock"
     conSinStockCheck = true;
     // Filtros
@@ -126,17 +126,13 @@ export class ConsultaGeneral {
         if (this.filtros.conStock == true){
             this.filtros.fechaDesde = '2022-01-01';
         }
-
-
         if (this.filtros.todos && this.productos && this.productos.todos && this.productos.todos.length > 0) {
 
            this.filtros.productoSelect2 = this.productos.todos[this.productos.todos.length-1]
-
-
         }
-
         this.stockData = this.consultaGeneralService.consultarStock(this.filtros);
         this.stockData.subscribe(result => {
+
             if (result.length > 0 ){
                 this.isLoading = false;
             }

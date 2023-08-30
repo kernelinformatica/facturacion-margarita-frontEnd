@@ -13,7 +13,7 @@
                     (ngModelChange)="onChangeInputProd($event)" (blur)="onBlurInputProd($event)">
 
                 <popup-lista *ngIf="
-                                    filtros.codProducto && 
+                                    filtros.codProducto &&
                                     filtros.codProducto.length > 0 &&
                                     !isProdSelected
                                 " [items]="productos.filtrados.asObservable().distinctUntilChanged()"
@@ -21,7 +21,7 @@
                     [fatherPosition]="popupListaService.getOffsetOfInputCliente('inputProducto')">
                 </popup-lista>
 
-                <!-- 
+                <!--
                  <input  disabled
                         [(ngModel)]="info.nombreProd"
                         type="text"
@@ -68,12 +68,12 @@
             </div>
 
 
-           
 
 
-               <!--  
-                 <div class="col-sm-2">   
-                
+
+               <!--
+                 <div class="col-sm-2">
+
                 <div class="item-input nro-cte">
                     <label for="desde" [ngStyle]="{'min-width': '117px'}">
                         Fecha Desde *
@@ -90,11 +90,11 @@
                             </button>
                         </div>
                     </div>
-                </div>  
-            
+                </div>
+
             </div>-->
 
-          
+
 
             <div class="col-sm-2">
 
@@ -114,7 +114,7 @@
                     </div>
 
                 </div>
-               
+
             </div>
 
           <div class="col-sm-1">
@@ -122,21 +122,21 @@
                         .
                     </label>
                 <div class="input-group">
-                        <button id="btnConsultar" [disabled]="!filtros.codProducto  
+                        <button id="btnConsultar" [disabled]="!filtros.codProducto
                        || !filtros.fechaHasta"
                         (click)="onClickConsultar()" class="btn btn-primary">
                         <i class="fa fa-search" aria-hidden="true"></i>
                         Consultar
                     </button>
                 </div>
-                
+
           </div>
 
 
         </div>
 
 
-        
+
 
 
     </ba-card>
@@ -149,7 +149,7 @@
             <thead>
                 <tr>
                     <th>Cte</th>
-                  
+
                     <th class="text-right">Numero</th>
                     <th>Fecha</th>
                     <th class="text-right">Ingresos</th>
@@ -162,16 +162,16 @@
             </thead>
             <tbody>
                 <tr *ngFor="let stockElement of mf.data">
-             
+
                     <td>{{ stockElement.comprobante }}</td>
                     <td class="text-right">{{ stockElement.numero }}</td>
                     <td>{{ utilsService.formatearFecha('DD/MM/YYYY')(stockElement.fechaEmision) }}</td>
-                    <td class="text-right">{{ stockElement.ingresos }}</td>
-                    <td class="text-right">{{ stockElement.egresos }}</td>
-                    <td class="text-right">{{ stockElement.precioCompra }}</td>
-                    <td class="text-right">{{ stockElement.stockFisico }}</td>
-                    <td class="text-right">{{ stockElement.pendiente }}</td>
-                    <td class="text-right">{{ stockElement.stockFisico+stockElement.stockVirtual }}</td>
+                    <td class="text-right">{{ stockElement.ingresos | number :'1.2-2' }}</td>
+                    <td class="text-right">{{ stockElement.egresos | number :'1.2-2' }}</td>
+                    <td class="text-right">{{ stockElement.precioCompra | number :'1.2-2' }}</td>
+                    <td class="text-right">{{ stockElement.stockFisico | number :'1.2-2' }}</td>
+                    <td class="text-right">{{ stockElement.pendiente | number :'1.2-2' }}</td>
+                    <td class="text-right">{{ stockElement.stockFisico+stockElement.stockVirtual | number :'1.2-2' }}</td>
                 </tr>
             </tbody>
             <tfoot>
@@ -182,23 +182,23 @@
                 </tr>
             </tfoot>
         </table>
-       
+
         <div class="btn-imprimir-container">
-            <button style="margin: 0 19px;" 
+            <button style="margin: 0 19px;"
             [disabled]="!filtros.codProducto  || !filtros.fechaHasta"
             (click)="descargarReporte()" type="submit" class="btn btn-secondary">
                 <i style="padding-right: 4px" class="fa fa-file-text-o" aria-hidden="true"></i>
                Descargar Reporte
-            </button> 
+            </button>
             <button style="margin: 0 19px;" (click)="this.utilsService.descargarArchivoCsv(mf.data,  columnasTablaHeader, 'stockProducto-'+filtros.codProducto)" type="submit" class="btn btn-secondary">
-                   
+
                 <i style="padding-right: 8px"class="fa fa-file-excel-o" aria-hidden="true"></i>
               Descargar Excel/Csv
             </button>
         </div>
 
-        
-           
-       
+
+
+
     </ba-card>
 </div>

@@ -286,7 +286,8 @@
                     </div>
 
                     </div>
-                    <div class="col-sm-4" *ngIf="comprobante && comprobante.tipo && comprobante.tipo.idCteTipo && comprobante.tipo.idCteTipo == 77">
+
+                    <div class="col-sm-4" *ngIf="comprobante && comprobante.tipo && comprobante.tipo.idCteTipo && comprobante.tipo.requiereClaveAutorizacion == true">
 
                             <div class="each-input">
                                 <label for="claveAutorizacion">Clave</label>
@@ -866,6 +867,7 @@
                             </div>
                             <div class="each-input same-line">
                                 <div>Número del comprobante autorizado:</div>
+
                                 <input [disabled]="relacionadoConfirmado" class="form-control max-length-half" name="ptoVentaAfipRelacionado" [(ngModel)]="ptoVentaAfipRelacionado" type="number">
                                 <input [disabled]="relacionadoConfirmado" class="form-control max-length" name="numeroComprobanteAfipRelacionado" [(ngModel)]="numeroComprobanteAfipRelacionado" type="number">
                             </div>

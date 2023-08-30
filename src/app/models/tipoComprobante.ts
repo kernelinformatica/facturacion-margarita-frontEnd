@@ -59,7 +59,7 @@ export class TipoComprobante {
             this.comprobante = null;
             // this.numerador = null;
             this.requiereFormaPago = null;
-            this.requiereClaveAutorizacion = null;
+            this.requiereClaveAutorizacion = false;
 
             this.letrasCodigos = [];
         }

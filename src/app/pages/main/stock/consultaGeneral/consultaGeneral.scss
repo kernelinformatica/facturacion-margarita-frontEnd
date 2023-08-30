@@ -1,10 +1,10 @@
 :host /deep/ .consulta-general {
 
     > .card > .card-body {
-       
+
         display: flex;
         justify-content: space-between;
-        
+
         .block-column {
             display: flex;
             flex-direction: column;
@@ -14,7 +14,7 @@
         .column-reverse {
             flex-direction: column-reverse;
         }
-        font-size: 11px;
+        font-size: 10px;
         .input-row {
             display: flex;
             padding: 2px;
@@ -90,7 +90,7 @@
 
         .table-striped > tbody > tr > .td-right {
             text-align: right !important;
-         
+
         }
         .table-striped > tbody > tr > .td-nowrap {
             white-space: nowrap;
@@ -122,5 +122,5 @@
 .btn-imprimir-container {
     display: flex;
     justify-content: flex-end;
-    margin: 1% -0.8%;    
+    margin: 1% -0.8%;
 }

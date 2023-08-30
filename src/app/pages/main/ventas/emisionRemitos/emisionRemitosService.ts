@@ -458,6 +458,8 @@ export class EmisionRemitosService {
                                 (marcaPesificado?) =>
                                 (pesificadoPersisteSn?) =>
                                 (nroCompPesificado?) =>
+                                (claveAutorizacion?) =>
+                                (factCabRelacionado?) =>
         this.authService.emitirRemito(
             this.localStorageService.getObject(environment.localStorage.acceso).token
         )(
@@ -492,7 +494,7 @@ export class EmisionRemitosService {
             subtotalesProductos
         )(
             listaPrecioSelec
-        )(contrato)(relacionCanje)(cereal)(diferidoVto)(pesificado)(marcaPesificado)(pesificadoPersisteSn)(nroCompPesificado)
+        )(contrato)(relacionCanje)(cereal)(diferidoVto)(pesificado)(marcaPesificado)(pesificadoPersisteSn)(nroCompPesificado)(claveAutorizacion)(factCabRelacionado)
 
     /**
      * Valida que los datos estén correctos

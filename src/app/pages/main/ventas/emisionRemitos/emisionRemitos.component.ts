@@ -103,7 +103,7 @@ export class EmisionRemitos {
     contrato: Contrato = new Contrato();
     relacionCanje: RelacionCanje = new RelacionCanje();
     claveAutorizacion;
-
+    idFactCabRelacionado;
     descuentoOriginal: Number = 0;
     precioOriginal: Number = 0;
     /////////////////////////////////////////////
@@ -151,6 +151,7 @@ export class EmisionRemitos {
     relacionadoConfirmado = false;
     codigoAfipRelacionado: number;
     ptoVentaAfipRelacionado: number;
+
     numeroComprobanteAfipRelacionado: number;
     numeroAfipRelacionado: number;
     factCabAfipRelacionado: number;
@@ -663,6 +664,7 @@ export class EmisionRemitos {
         this.esCanje = false;
         this.isAutorizada = false;
         this.claveAutorizacion = null;
+        this.idFactCabRelacionado = null;
         this.percep2459 = false;
         this.esPesificado = false;
         this.cliente.condIva = null;
@@ -707,6 +709,8 @@ export class EmisionRemitos {
                         )()();
                     }
                   }
+
+                  alert(this.ptoVentaAfipRelacionado+" - "+this.numeroComprobanteAfipRelacionado)
                   this.actualizarSumatoriaSubto();
                   // Si SI hay intervalo y la fecha SE SALE de el, entonces..
                   if (this.fechaComprobanteInvalida()) {
@@ -736,15 +740,12 @@ export class EmisionRemitos {
                               this.tablas.datos.detallesFormaPago
                           )(this.deposito)(this.tablas.datos.lotesTraza)(
                               this.tipoOperacion
-                          )(this.dataVendedor)(
-                              this.tablas.datos.subtotalesProductos
-                          )(this.listaPrecioSelect)(this.contrato)(
+                          )(this.dataVendedor)(this.tablas.datos.subtotalesProductos)(this.listaPrecioSelect)(this.contrato)(
                               this.relacionCanje
-                          )(this.cereal)(this.diferidoVto)(this.pesificado)(
-                              this.marcaPesificado
-                          )(this.pesificadoPersisteSn)(
-                              this.comprobantePesificadoInterno
-                          )
+                          )(this.cereal)(this.diferidoVto)(this.pesificado)(this.marcaPesificado
+                          )(this.pesificadoPersisteSn)(this.comprobantePesificadoInterno)
+                          (this.claveAutorizacion)
+                          (this.idFactCabRelacionado)
                           .catch((err) => {
                               this.grabandoPorcentaje = 0;
                               this.grabandoPorcentajeAfip = 0;
@@ -752,25 +753,27 @@ export class EmisionRemitos {
                               return Observable.throw(null);
                           })
                           .subscribe((respuesta: any) => {
-
+                            debugger
                               this.grabandoPorcentaje = 60;
+
                               if (this.comprobante.tipo.cursoLegal) {
-                                        this.grabandoPorcentajeAfip =35;
+
                                         /*
 
                                         Autorizo en AFIP
 
                                         */
-                                        debugger
+                                        this.grabandoPorcentajeAfip =35;
                                         this.emisionRemitosService
                                         .autorizarAfip(
                                         respuesta.datos.idFactCab,
                                         this.factCabAfipRelacionado
                                         )
                                         .catch((err) => {
-                                        this.blanquearCampos();
-                                        this.grabandoPorcentaje = 0;
-                                        this.grabandoPorcentajeAfip = 0
+                                            this.grabandoPorcentaje = 0;
+                                            this.grabandoPorcentajeAfip = 0
+                                            this.blanquearCampos();
+
                                         this.utilsService.showErrorWithBody(
                                             err,
                                             true,
@@ -780,14 +783,15 @@ export class EmisionRemitos {
                                             return Observable.throw(null);
                                         })
                                         .subscribe((respAfip) => {
-                                            this.grabandoPorcentajeAfip =60;
+                                            this.grabandoPorcentajeAfip =0;
+                                            this.grabandoPorcentaje = 0;
                                             if (respAfip && respAfip.datos) {
                                             const compCreado = new ComprobanteEncabezado();
                                             compCreado.idFactCab = respuesta.datos.idFactCab;
-                                            this.grabandoPorcentajeAfip =95;
-                                            alert("Comprobante "+respAfip.datos.numero+" autorizado con éxito, CAI otorgado: "+respAfip.datos.cai)
-                                            ;
-                                            this.grabandoPorcentajeAfip =0;
+
+                                            alert("Comprobante "+respAfip.datos.numero+" autorizado con éxito, CAI otorgado: "+respAfip.datos.cai)  ;
+
+
                                             compCreado.numero = Number(
                                                 `${
                                                 this.comprobante.numerador.ptoVenta.ptoVenta
@@ -821,7 +825,6 @@ export class EmisionRemitos {
                                             }
                                             }
                                         });
-
 
 
                                         /*
@@ -934,6 +937,8 @@ export class EmisionRemitos {
      */
     blanquearCampos = () => {
 
+        /*this.grabandoPorcentaje =0;*/
+        this.claveAutorizacion = "";
         const auxFecha = this.comprobante.fechaComprobante;
         this.comprobante = new Comprobante();
         this.comprobante.fechaComprobante = auxFecha;
@@ -1862,13 +1867,14 @@ export class EmisionRemitos {
     };
 
     disabledConfirmar = () => {
+
         const noPermiteImporteCero =
-            this.cotizacionDatos &&
-            this.comprobante.tipo &&
-            this.comprobante.tipo.comprobante &&
+            this.comprobante.tipo
+            /*&& this.cotizacionDatos &&
+           this.comprobante.tipo.comprobante &&
             this.cotizacionDatos.total + this.sumatoriaSubtotales === 0 &&
             !this.comprobante.tipo.comprobante.permiteImporteCero;
-
+*/
         const datosNoValidos =
             !this.emisionRemitosService.checkIfDatosValidosComprobante(
                 this.comprobante
@@ -1887,15 +1893,15 @@ export class EmisionRemitos {
         const relacionadoNoValido =
             this.comprobante &&
             this.comprobante.tipo &&
-            (this.comprobante.tipo.idCteTipo == 77 ||
-                this.comprobante.tipo.idCteTipo == 76) &&
-            (!this.relacionadoConfirmado || !this.factCabAfipRelacionado);
+           /* (this.comprobante.tipo.idCteTipo == 77 || this.comprobante.tipo.idCteTipo == 76) &&*/
+            (!this.relacionadoConfirmado  || !this.factCabAfipRelacionado  );
 
         return (
             datosNoValidos ||
             formaPagoNoValido ||
             noPermiteImporteCero ||
             relacionadoNoValido
+
         );
     };
 
@@ -2037,8 +2043,7 @@ export class EmisionRemitos {
             this.numeroComprobanteAfipRelacionado &&
             this.ptoVentaAfipRelacionado
         ) {
-            const stringNumeroComprobante =
-                this.numeroComprobanteAfipRelacionado.toString();
+            const stringNumeroComprobante = this.numeroComprobanteAfipRelacionado.toString();
             this.numeroAfipRelacionado = Number(
                 this.ptoVentaAfipRelacionado.toString() +
                     _.padStart(stringNumeroComprobante, 8, "0")
@@ -2049,8 +2054,12 @@ export class EmisionRemitos {
                     this.numeroAfipRelacionado
                 )
                 .subscribe((response) => {
+                    this.idFactCabRelacionado = response.control.descripcionLarga;
+
                     this.utilsService.showModal(response.control.codigo)(
+
                         response.control.descripcion
+
                     )()();
                     if (response.control.codigo == "OK") {
                         this.relacionadoConfirmado = true;
@@ -2058,7 +2067,8 @@ export class EmisionRemitos {
                             response.control.descripcionLarga
                         );
                     }
-                });
+                })
+
         } else {
             this.utilsService.showModal("Error")(
                 "Complete ambos campos para la búsqueda de comprobante"
